@@ -875,23 +875,20 @@ function combinefingerImpairments(impairments) {
     try {
         let combined = 0;
         let combinedSteps = [];
-        impairments.forEach(imp => {
+        
+        for (let i = 0; i < impairments.length; i++) {
+            let imp = impairments[i];
             combined = combined + (imp / 100) * (1 - combined);
             combinedSteps.push(imp);
-        });
+            
+            console.log(`Step ${i + 1}: ${combined.toFixed(4)} * 100 = ${(combined * 100).toFixed(2)}`);
+        }
         
-        // Fix precision and round correctly
         let precisionFixedResult = Number((combined * 100).toFixed(2));
         let roundedResult = Math.round(precisionFixedResult);
         
-        console.log('combinefingerImpairments intermediate result:', precisionFixedResult);
-        
-        let result = { 
-            combined: roundedResult, 
-            combinedSteps 
-        };
-        console.log('combinefingerImpairments final result:', result);
-        return result;
+        console.log('combinefingerImpairments final result:', roundedResult);
+        return { combined: roundedResult, combinedSteps };
     } catch (error) {
         console.error('Error in combinefingerImpairments:', error);
         return { combined: 0, combinedSteps: [] };
