@@ -873,22 +873,23 @@ function lookupfingerDTImpairment(angle, jointType, motionType) {
 function combinefingerImpairments(impairments) {
     console.log('combinefingerImpairments called with:', impairments);
     try {
-        let combined = 0;
         let combinedSteps = [];
-        
+        let result = 0;
+
         for (let i = 0; i < impairments.length; i++) {
             let imp = impairments[i];
-            combined = combined + (imp / 100) * (1 - combined);
+            if (i === 0) {
+                result = imp;
+            } else {
+                result = result + imp * (1 - result / 100);
+                result = Math.round(result); // Round after each combination
+            }
             combinedSteps.push(imp);
-            
-            console.log(`Step ${i + 1}: ${combined.toFixed(4)} * 100 = ${(combined * 100).toFixed(2)}`);
+            console.log(`Step ${i + 1}: Combining with ${imp}, Result: ${result}`);
         }
-        
-        let precisionFixedResult = Number((combined * 100).toFixed(2));
-        let roundedResult = Math.round(precisionFixedResult);
-        
-        console.log('combinefingerImpairments final result:', roundedResult);
-        return { combined: roundedResult, combinedSteps };
+
+        console.log('combinefingerImpairments final result:', result);
+        return { combined: result, combinedSteps };
     } catch (error) {
         console.error('Error in combinefingerImpairments:', error);
         return { combined: 0, combinedSteps: [] };
